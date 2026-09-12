@@ -445,7 +445,7 @@ namespace ValheimPlayerModels
         //[RuntimeInitializeOnLoadMethod]
         public static void AppStart()
         {
-            var defaultLoop = PlayerLoop.GetDefaultPlayerLoop();
+            var currentLoop = PlayerLoop.GetCurrentPlayerLoop();
             var customUpdate = new PlayerLoopSystem
             {
                 subSystemList = null,
@@ -453,7 +453,7 @@ namespace ValheimPlayerModels
                 type = typeof(VPMPreConstraints)
             };
 
-            var updatedLoop = InsertSystemBefore<PreLateUpdate.ConstraintManagerUpdate>(defaultLoop, customUpdate);
+            var updatedLoop = InsertSystemBefore<PreLateUpdate.ConstraintManagerUpdate>(currentLoop, customUpdate);
             PlayerLoop.SetPlayerLoop(updatedLoop);
             Debug.Log("Set player loop.");
         }
