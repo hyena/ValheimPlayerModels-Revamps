@@ -70,8 +70,17 @@ namespace ValheimPlayerModels
             }
         }
 
-        private void OnDestroy()
+        private void OnEnable()
         {
+            CustomPlayerLoop.PreConstraints += PreConstraints;
+        }
+
+        private void OnDisable() {
+            CustomPlayerLoop.PreConstraints -= PreConstraints;
+        }
+
+        private void OnDestroy()
+        {   
             if (localModel == this)
             {
                 Plugin.showActionMenu = false;
@@ -124,6 +133,19 @@ namespace ValheimPlayerModels
             }
         }
 
+        private void PreConstraints()
+        {
+            //Debug.Log("Doing pre-constraint thing.");
+            if (playerModelLoaded && playerModelVisible && !dead)
+            {
+                if (enableTracking)
+                {
+                    ogPose.GetHumanPose(ref pose);
+                    pmPose.SetHumanPose(ref pose);
+                }
+            }
+        }
+
         private void LateUpdate()
         {
             if (playerModelLoaded && playerModelVisible && !dead)
@@ -131,8 +153,8 @@ namespace ValheimPlayerModels
                 if (enableTracking)
                 {
                     avatar.Transform.localPosition = Vector3.zero;
-                    ogPose.GetHumanPose(ref pose);
-                    pmPose.SetHumanPose(ref pose);
+                    //ogPose.GetHumanPose(ref pose);
+                    //pmPose.SetHumanPose(ref pose);
 
                     Transform ogHips = ogAnimator.GetBoneTransform(HumanBodyBones.Hips);
 
@@ -447,26 +469,29 @@ namespace ValheimPlayerModels
                 requestHide = true;
                 return;
             }
-
             if (visEquipment)
             {
                 visEquipment.m_beardItemInstance?.SetActive(visible);
                 visEquipment.m_hairItemInstance?.SetActive(visible);
                 visEquipment.m_helmetItemInstance?.SetActive(visible || avatar.AvatarDescriptor.showHelmet);
 
-                if(visEquipment.m_shoulderItemInstances != null)
+                if (visEquipment.m_shoulderItemInstances != null)
                     foreach (GameObject itemInstance in visEquipment.m_shoulderItemInstances)
                     {
-                        // if (visEquipment.m_shoulderItem.ToLower().Contains("cape"))
-                        // {
-                        //     itemInstance?.SetActive(visible || avatar.AvatarDescriptor.showCape);
-                        //     foreach (SkinnedMeshRenderer skinnedMeshRenderer in itemInstance.GetComponentsInChildren<SkinnedMeshRenderer>())
-                        //     {
-                        //         skinnedMeshRenderer.forceRenderingOff = false;
-                        //         skinnedMeshRenderer.updateWhenOffscreen = true;
-                        //     }
-                        // }
-                        // else itemInstance?.SetActive(visible);
+                        foreach (Transform childTransform in itemInstance.transform)
+                        {
+                            var child = childTransform.gameObject;
+                            if (child.name.ToLower().Contains("cape"))
+                            {
+                                child?.SetActive(visible || avatar.AvatarDescriptor.showCape);
+                                foreach (SkinnedMeshRenderer skinnedMeshRenderer in child.GetComponentsInChildren<SkinnedMeshRenderer>())
+                                {
+                                    skinnedMeshRenderer.forceRenderingOff = false;
+                                    skinnedMeshRenderer.updateWhenOffscreen = true;
+                                }
+                            }
+                            else child?.SetActive(visible);
+                        }
                     }
                 if (visEquipment.m_legItemInstances != null)
                     foreach (GameObject itemInstance in visEquipment.m_legItemInstances) { itemInstance?.SetActive(visible); }

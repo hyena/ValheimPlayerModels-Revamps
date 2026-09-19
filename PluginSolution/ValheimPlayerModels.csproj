@@ -8,8 +8,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release;SDK</Configurations>
-    <PackageProjectUrl>https://github.com/Burrely/ValheimPlayerModels-Revamps</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Burrely/ValheimPlayerModels-Revamps</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/hyena/ValheimPlayerModels-Revamps</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hyena/ValheimPlayerModels-Revamps</RepositoryUrl>
     <Product>Valheim Player Models</Product>
   </PropertyGroup>
 
@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <Target Name="PropertyValidation" AfterTargets="BeforeBuild">
-    <Error Text="GameDir property must be provided when PublicizeLocally is 'true'." Condition="'$(GameDir)' == '' and '$(PublicizeLocally)' == 'true'"/>
+    <Error Text="GameDir property must be provided when PublicizeLocally is 'true'." Condition="'$(GameDir)' == '' and '$(PublicizeLocally)' == 'true'" />
   </Target>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,18 +29,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;PLUGIN</DefineConstants>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <!-- Used by both SDK and Plugin -->
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.50" IncludeAssets="compile" />
-    <PackageReference Include="Valheim.GameLibs" Version="*-*">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)'!='SDK'">
-    <!-- Plugin Only (not SDK) -->
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU' or '$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -48,17 +38,20 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="UnityEngine.Modules" Version="2020.3.33" IncludeAssets="compile" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(Configuration)'!='SDK' and ('$(GameDir)' == '' or '$(PublicizeLocally)' == 'false')">
     <!-- Plugin Only, PublicizeLocally=False, use gamelibs from nuget -->
     <PackageReference Include="Valheim.GameLibs" Version="*-*" IncludeAssets="compile" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)'!='SDK' and '$(GameDir)' != '' and '$(PublicizeLocally)' == 'true'">
-    <!-- Plugin Only, PublicizeLocally=True, use gamelibs from game directory -->
+  <ItemGroup Condition="'$(GameDir)' != '' and '$(PublicizeLocally)' == 'true' and $(ConfigurationName) != SDK">
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
-    <Reference Include="$(GameDir)\valheim_Data\Managed\assembly_*.dll" IncludeAssets="compile" Publicize="true"/>
-    <Reference Include="$(GameDir)\valheim_Data\Managed\Splatform.dll" IncludeAssets="compile" Publicize="true"/>
-    <Reference Include="$(GameDir)\valheim_Data\Managed\SoftReferenceableAssets.dll" IncludeAssets="compile" Publicize="true"/>
+    <Reference Include="$(GameDir)\valheim_Data\Managed\assembly_*.dll" IncludeAssets="compile" Publicize="true" />
+    <Reference Include="$(GameDir)\valheim_Data\Managed\Splatform.dll" IncludeAssets="compile" Publicize="true" />
+    <Reference Include="$(GameDir)\valheim_Data\Managed\SoftReferenceableAssets.dll" IncludeAssets="compile" Publicize="true" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">

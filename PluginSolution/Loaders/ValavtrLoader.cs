@@ -1,5 +1,4 @@
 ﻿#if PLUGIN
-using System;
 using SoftReferenceableAssets;
 using System.Collections;
 using System.Collections.Generic;
