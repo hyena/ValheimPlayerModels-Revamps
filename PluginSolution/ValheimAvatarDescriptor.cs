@@ -88,10 +88,10 @@ namespace ValheimPlayerModels
             
             // if (boolParametersDefault.Count != boolParameters.Count)
             //     boolParametersDefault.Resize(boolParameters.Count);
-            //
+            
             // if (intParametersDefault.Count != intParameters.Count)
             //     intParametersDefault.Resize(intParameters.Count);
-            //
+            
             // if (floatParametersDefault.Count != floatParameters.Count)
             //     floatParametersDefault.Resize(floatParameters.Count);
 

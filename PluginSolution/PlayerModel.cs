@@ -457,16 +457,16 @@ namespace ValheimPlayerModels
                 if(visEquipment.m_shoulderItemInstances != null)
                     foreach (GameObject itemInstance in visEquipment.m_shoulderItemInstances)
                     {
-                        if (visEquipment.m_shoulderItem.ToLower().Contains("cape"))
-                        {
-                            itemInstance?.SetActive(visible || avatar.AvatarDescriptor.showCape);
-                            foreach (SkinnedMeshRenderer skinnedMeshRenderer in itemInstance.GetComponentsInChildren<SkinnedMeshRenderer>())
-                            {
-                                skinnedMeshRenderer.forceRenderingOff = false;
-                                skinnedMeshRenderer.updateWhenOffscreen = true;
-                            }
-                        }
-                        else itemInstance?.SetActive(visible);
+                        // if (visEquipment.m_shoulderItem.ToLower().Contains("cape"))
+                        // {
+                        //     itemInstance?.SetActive(visible || avatar.AvatarDescriptor.showCape);
+                        //     foreach (SkinnedMeshRenderer skinnedMeshRenderer in itemInstance.GetComponentsInChildren<SkinnedMeshRenderer>())
+                        //     {
+                        //         skinnedMeshRenderer.forceRenderingOff = false;
+                        //         skinnedMeshRenderer.updateWhenOffscreen = true;
+                        //     }
+                        // }
+                        // else itemInstance?.SetActive(visible);
                     }
                 if (visEquipment.m_legItemInstances != null)
                     foreach (GameObject itemInstance in visEquipment.m_legItemInstances) { itemInstance?.SetActive(visible); }
